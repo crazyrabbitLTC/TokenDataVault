@@ -4,18 +4,21 @@ import fs from "fs";
 import path from "path";
 import readChunk from "read-chunk";
 import fileType from "file-type";
+import Parser from "exif-parser";
 
 const fileArray = directoryPath => {
   let directoryContents = fs.readdirSync(directoryPath);
 
   return directoryContents
-    .filter(item => fs.statSync(item).isFile())
-    .map(item => path.join(directoryPath, item));
+    .filter(file => fs.statSync(file).isFile())
+    .map(file => {
+      return { fileName: file, filePath: (path.join(directoryPath, file))};
+    });
 };
 
 const sortFiles = (filePathArray, fileTypeArray) => {
   return filePathArray.filter(file => {
-    return fileTypeArray.includes(getFileType(file).ext);
+    return fileTypeArray.includes(getFileType(file.filePath).ext);
   });
 };
 
@@ -24,4 +27,19 @@ const getFileType = file => {
   return fileType(readChunk.sync(file, 0, fileType.minimumBytes)) || example;
 };
 
-export { fileArray, sortFiles };
+//should only receive jpg or tiff files
+const extractEXIF = (imageFile, exifData = {}) => {
+  const parser = Parser.create(fs.readFileSync(imageFile.filePath));
+
+  try {
+    exifData = { ...imageFile, exif: { ...parser.parse() } };
+  } catch (err) {
+    // got invalid data, handle error
+    console.log(err);
+    return exifData;
+  }
+
+  return exifData;
+};
+
+export { fileArray, sortFiles, extractEXIF };
