@@ -1,23 +1,26 @@
-"use strict";
+"use strict"
 
 import {
     fileArray,
     sortFiles,
     extractEXIF,
     addFileHash,
-    buf2hex
-} from "./src/fileUtils";
-import config from "./config";
-import keccak256 from "keccak256";
-import MerkleTree from "merkletreejs";
+    buf2hex,
+    hashItemsInArray
+} from "./src/fileUtils"
+import config from "./config"
+import keccak256 from "keccak256"
+
+import MerkleTree, {
+    checkProof,
+    merkleRoot,
+    checkProofSolidityFactory
+} from "merkle-tree-solidity"
 
 const start = async () => {
-    const array = fileArray(config.path);
-
-    const sortedArray = sortFiles(array, config.imageTypes);
-
-    const exifMetadata = sortedArray.map(file => extractEXIF(file));
-
+    const array = fileArray(config.path)
+    const sortedArray = sortFiles(array, config.imageTypes)
+    const exifMetadata = sortedArray.map(file => extractEXIF(file))
     const dataWithHash = exifMetadata.map(file => {
         return {
             ...file,
@@ -26,30 +29,25 @@ const start = async () => {
             imageInfo: [],
             artist: [],
             chainData: []
-        };
-    });
+        }
+    })
 
     const onlyDataToHash = dataWithHash.map(item => {
-        let obj = { fileName: item.fileName, hash: item.keccak256 };
-        return obj;
-    });
+        let obj = { fileName: item.fileName, hash: item.keccak256 }
+        return obj
+    })
 
-    const hashItemsInArray = array => {
-        return array.map(item => {
-            return keccak256(JSON.stringify(item));
-        });
-    };
+    const leaves2 = hashItemsInArray(onlyDataToHash)
 
-    const leaves = hashItemsInArray(onlyDataToHash);
+    const elements = onlyDataToHash.map(e => keccak256(JSON.stringify(e)))
 
-    const tree = new MerkleTree(leaves, keccak256);
-    
-    const root = Buffer.from(tree.getRoot(), "hex");
+    const merkleTree = new MerkleTree(elements)
 
-    const sampleLeaf = Buffer.from(keccak256(JSON.stringify(onlyDataToHash[0])), "hex");
+    const root = merkleTree.getRoot()
 
-    const proof = tree.getProof(sampleLeaf).map(x => buf2hex(x.data));
-    console.log(sampleLeaf);
-};
+    const proof = merkleTree.getProof(elements[0])
 
-start();
+    console.log(checkProof(proof, root, elements[0]))
+}
+
+start()
