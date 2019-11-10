@@ -7,19 +7,18 @@ import {
     addFileHash
 } from "./src/fileUtils";
 
-import directory from "./config";
+import config from "./config";
+import {skeleton, cmoa, exif, imageInfo, artist, chainData} from "./src/metadataConfig";
 
 const start = async () => {
-    let array = fileArray(directory.path);
+    let array = fileArray(config.path);
 
-    let sortedArray = sortFiles(array, ["jpg", "tiff"]);
+    let sortedArray = sortFiles(array, config.imageTypes);
 
     let exifMetadata = sortedArray.map(file => extractEXIF(file));
 
-    //console.log(JSON.stringify(exifMetadata, null, 2));
-
     let dataWithHash = exifMetadata.map(file => {
-        return { ...file, keccak256: addFileHash(file) };
+        return { ...file, keccak256: addFileHash(file), cmoa, imageInfo, artist, chainData };
     });
 
     console.log(dataWithHash);

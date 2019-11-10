@@ -1,5 +1,6 @@
-const directory = {
-    path: "/Users/dennison/Documents/TokenDataVault/samplePics"
+const config = {
+    path: "/Users/dennison/Documents/TokenDataVault/samplePics",
+    imageTypes: ["jpg", "tiff"]
 };
 
-export { directory as default };
+export { config as default };

@@ -3,8 +3,9 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-var directory = {
-    path: "/Users/dennison/Documents/TokenDataVault/samplePics"
+var config = {
+    path: "/Users/dennison/Documents/TokenDataVault/samplePics",
+    imageTypes: ["jpg", "tiff"]
 };
 
-exports.default = directory;
+exports.default = config;
