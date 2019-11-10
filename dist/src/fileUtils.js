@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.extractEXIF = exports.sortFiles = exports.fileArray = undefined;
+exports.addFileHash = exports.extractEXIF = exports.sortFiles = exports.fileArray = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -26,6 +26,10 @@ var _fileType2 = _interopRequireDefault(_fileType);
 var _exifParser = require("exif-parser");
 
 var _exifParser2 = _interopRequireDefault(_exifParser);
+
+var _keccak = require("keccak256");
+
+var _keccak2 = _interopRequireDefault(_keccak);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -67,6 +71,12 @@ var extractEXIF = function extractEXIF(imageFile) {
   return exifData;
 };
 
+var addFileHash = function addFileHash(fileObj) {
+  var buffer = _fs2.default.readFileSync(fileObj.filePath);
+  return (0, _keccak2.default)(buffer).toString("hex");
+};
+
 exports.fileArray = fileArray;
 exports.sortFiles = sortFiles;
 exports.extractEXIF = extractEXIF;
+exports.addFileHash = addFileHash;

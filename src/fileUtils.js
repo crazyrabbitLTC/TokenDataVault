@@ -5,6 +5,7 @@ import path from "path";
 import readChunk from "read-chunk";
 import fileType from "file-type";
 import Parser from "exif-parser";
+import keccak256 from "keccak256";
 
 const fileArray = directoryPath => {
   let directoryContents = fs.readdirSync(directoryPath);
@@ -12,7 +13,7 @@ const fileArray = directoryPath => {
   return directoryContents
     .filter(file => fs.statSync(file).isFile())
     .map(file => {
-      return { fileName: file, filePath: (path.join(directoryPath, file))};
+      return { fileName: file, filePath: path.join(directoryPath, file) };
     });
 };
 
@@ -42,4 +43,9 @@ const extractEXIF = (imageFile, exifData = {}) => {
   return exifData;
 };
 
-export { fileArray, sortFiles, extractEXIF };
+const addFileHash = fileObj => {
+  let buffer = fs.readFileSync(fileObj.filePath);
+  return keccak256(buffer).toString("hex");
+};
+
+export { fileArray, sortFiles, extractEXIF, addFileHash };
