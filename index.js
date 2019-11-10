@@ -4,21 +4,12 @@ import {
     fileArray,
     sortFiles,
     extractEXIF,
-    addFileHash
+    addFileHash,
+    buf2hex
 } from "./src/fileUtils";
-
 import config from "./config";
-import {
-    skeleton,
-    cmoa,
-    exif,
-    imageInfo,
-    artist,
-    chainData
-} from "./src/metadataConfig";
-
-import EthCrypto from "eth-crypto";
 import keccak256 from "keccak256";
+import MerkleTree from "merkletreejs";
 
 const start = async () => {
     const array = fileArray(config.path);
@@ -49,8 +40,16 @@ const start = async () => {
         });
     };
 
-    const result = hashItemsInArray(onlyDataToHash);
-    console.log(result);
+    const leaves = hashItemsInArray(onlyDataToHash);
+
+    const tree = new MerkleTree(leaves, keccak256);
+    
+    const root = Buffer.from(tree.getRoot(), "hex");
+
+    const sampleLeaf = Buffer.from(keccak256(JSON.stringify(onlyDataToHash[0])), "hex");
+
+    const proof = tree.getProof(sampleLeaf).map(x => buf2hex(x.data));
+    console.log(sampleLeaf);
 };
 
 start();

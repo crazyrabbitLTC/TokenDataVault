@@ -7,47 +7,49 @@ import fileType from "file-type";
 import Parser from "exif-parser";
 import keccak256 from "keccak256";
 
-const fileArray = directoryPath => {
-  let directoryContents = fs.readdirSync(directoryPath);
+function fileArray(directoryPath) {
+    let directoryContents = fs.readdirSync(directoryPath);
 
-  return directoryContents
-    .filter(file => fs.statSync(path.join(directoryPath, file)).isFile())
-    .map(file => {
-      return { fileName: file, filePath: path.join(directoryPath, file) };
+    return directoryContents
+        .filter(file => fs.statSync(path.join(directoryPath, file)).isFile())
+        .map(file => {
+            return { fileName: file, filePath: path.join(directoryPath, file) };
+        });
+}
+
+function sortFiles(filePathArray, fileTypeArray) {
+    return filePathArray.filter(file => {
+        return fileTypeArray.includes(getFileType(file.filePath).ext);
     });
-};
+}
 
-const sortFiles = (filePathArray, fileTypeArray) => {
-  return filePathArray.filter(file => {
-    return fileTypeArray.includes(getFileType(file.filePath).ext);
-  });
-};
-
-const getFileType = file => {
-  let example = { ext: null, mime: null };
-  return fileType(readChunk.sync(file, 0, fileType.minimumBytes)) || example;
-};
+function getFileType(file) {
+    let example = { ext: null, mime: null };
+    return fileType(readChunk.sync(file, 0, fileType.minimumBytes)) || example;
+}
 
 //should only receive jpg or tiff files
-const extractEXIF = (imageFile, exifData = {}) => {
-  const parser = Parser.create(fs.readFileSync(imageFile.filePath));
+function extractEXIF(imageFile, exifData = {}) {
+    const parser = Parser.create(fs.readFileSync(imageFile.filePath));
 
-  try {
-    exifData = { ...imageFile, exif: { ...parser.parse() } };
-  } catch (err) {
-    // got invalid data, handle error
-    console.log(err);
+    try {
+        exifData = { ...imageFile, exif: { ...parser.parse() } };
+    } catch (err) {
+        // got invalid data, handle error
+        console.log(err);
+        return exifData;
+    }
+
     return exifData;
-  }
+}
 
-  return exifData;
-};
+function addFileHash(fileObj) {
+    let buffer = fs.readFileSync(fileObj.filePath);
+    return keccak256(buffer).toString("hex");
+}
 
-const addFileHash = fileObj => {
-  let buffer = fs.readFileSync(fileObj.filePath);
-  return keccak256(buffer).toString("hex");
-};
+function buf2hex() {
+    return x => "0x" + x.toString("hex");
+}
 
-
-
-export { fileArray, sortFiles, extractEXIF, addFileHash };
+export { fileArray, sortFiles, extractEXIF, addFileHash, buf2hex };
