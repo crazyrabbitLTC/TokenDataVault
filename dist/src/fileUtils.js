@@ -37,7 +37,7 @@ var fileArray = function fileArray(directoryPath) {
   var directoryContents = _fs2.default.readdirSync(directoryPath);
 
   return directoryContents.filter(function (file) {
-    return _fs2.default.statSync(file).isFile();
+    return _fs2.default.statSync(_path2.default.join(directoryPath, file)).isFile();
   }).map(function (file) {
     return { fileName: file, filePath: _path2.default.join(directoryPath, file) };
   });

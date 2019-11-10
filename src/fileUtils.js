@@ -11,7 +11,7 @@ const fileArray = directoryPath => {
   let directoryContents = fs.readdirSync(directoryPath);
 
   return directoryContents
-    .filter(file => fs.statSync(file).isFile())
+    .filter(file => fs.statSync(path.join(directoryPath, file)).isFile())
     .map(file => {
       return { fileName: file, filePath: path.join(directoryPath, file) };
     });
