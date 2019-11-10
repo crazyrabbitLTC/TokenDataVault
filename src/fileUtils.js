@@ -48,4 +48,6 @@ const addFileHash = fileObj => {
   return keccak256(buffer).toString("hex");
 };
 
+
+
 export { fileArray, sortFiles, extractEXIF, addFileHash };

@@ -10,6 +10,14 @@ var _config2 = _interopRequireDefault(_config);
 
 var _metadataConfig = require("./src/metadataConfig");
 
+var _ethCrypto = require("eth-crypto");
+
+var _ethCrypto2 = _interopRequireDefault(_ethCrypto);
+
+var _keccak = require("keccak256");
+
+var _keccak2 = _interopRequireDefault(_keccak);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var start = async function start() {
@@ -22,10 +30,28 @@ var start = async function start() {
     });
 
     var dataWithHash = exifMetadata.map(function (file) {
-        return _extends({}, file, { keccak256: (0, _fileUtils.addFileHash)(file), cmoa: _metadataConfig.cmoa, imageInfo: _metadataConfig.imageInfo, artist: _metadataConfig.artist, chainData: _metadataConfig.chainData });
+        return _extends({}, file, {
+            keccak256: (0, _fileUtils.addFileHash)(file),
+            cmoa: [],
+            imageInfo: [],
+            artist: [],
+            chainData: []
+        });
     });
 
-    console.log(dataWithHash);
+    var onlyDataToHash = dataWithHash.map(function (item) {
+        var obj = { fileName: item.fileName, hash: item.keccak256 };
+        return obj;
+    });
+
+    var hashItemsInArray = function hashItemsInArray(array) {
+        return array.map(function (item) {
+            return (0, _keccak2.default)(JSON.stringify(item));
+        });
+    };
+
+    var result = hashItemsInArray(onlyDataToHash);
+    console.log(result);
 };
 
 start();

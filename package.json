@@ -1,40 +1,49 @@
 {
-  "name": "tokendatavault",
-  "version": "0.0.1",
-  "description": "A took for automatically creating metadata for NFT tokens from existing files",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files",
-    "start": "npm run build && node dist/index.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/crazyrabbitLTC/TokenDataVault.git"
-  },
-  "keywords": [
-    "ethereum",
-    "heritagedao",
-    "dao",
-    "nft"
-  ],
-  "author": "Dennison Bertram (www.dennisonbertram.com)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/crazyrabbitLTC/TokenDataVault/issues"
-  },
-  "homepage": "https://github.com/crazyrabbitLTC/TokenDataVault#readme",
-  "dependencies": {
-    "exif-parser": "^0.1.12",
-    "file-type": "^12.4.0",
-    "keccak256": "^1.0.0",
-    "read-chunk": "^3.2.0"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-es2015": "^6.24.1",
-    "prettier": "1.19.1",
-    "rimraf": "^3.0.0"
-  }
+    "name": "tokendatavault",
+    "version": "0.0.1",
+    "description": "A took for automatically creating metadata for NFT tokens from existing files",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files",
+        "start_build": "npm run build && node dist/index.js",
+        "start": "nodemon index.js --ext js,graphql --exec babel-node --delay 2",
+        "buildAndRun": "nodemon npm run start"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/crazyrabbitLTC/TokenDataVault.git"
+    },
+    "keywords": [
+        "ethereum",
+        "heritagedao",
+        "dao",
+        "nft"
+    ],
+    "author": "Dennison Bertram (www.dennisonbertram.com)",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/crazyrabbitLTC/TokenDataVault/issues"
+    },
+    "homepage": "https://github.com/crazyrabbitLTC/TokenDataVault#readme",
+    "dependencies": {
+        "@nomiclabs/buidler": "^1.0.1",
+        "buidler": "^0.2.8",
+        "eth-crypto": "^1.5.0",
+        "exif-parser": "^0.1.12",
+        "file-type": "^12.4.0",
+        "keccak256": "^1.0.0",
+        "merklemint": "0.0.1",
+        "merkletreejs": "^0.1.7",
+        "nodemon": "^1.19.4",
+        "read-chunk": "^3.2.0",
+        "web3": "^1.2.2"
+    },
+    "devDependencies": {
+        "babel-cli": "^6.26.0",
+        "babel-plugin-transform-object-rest-spread": "^6.26.0",
+        "babel-preset-es2015": "^6.24.1",
+        "prettier": "1.19.1",
+        "rimraf": "^3.0.0"
+    }
 }

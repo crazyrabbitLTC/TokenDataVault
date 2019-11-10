@@ -8,20 +8,49 @@ import {
 } from "./src/fileUtils";
 
 import config from "./config";
-import {skeleton, cmoa, exif, imageInfo, artist, chainData} from "./src/metadataConfig";
+import {
+    skeleton,
+    cmoa,
+    exif,
+    imageInfo,
+    artist,
+    chainData
+} from "./src/metadataConfig";
+
+import EthCrypto from "eth-crypto";
+import keccak256 from "keccak256";
 
 const start = async () => {
-    let array = fileArray(config.path);
+    const array = fileArray(config.path);
 
-    let sortedArray = sortFiles(array, config.imageTypes);
+    const sortedArray = sortFiles(array, config.imageTypes);
 
-    let exifMetadata = sortedArray.map(file => extractEXIF(file));
+    const exifMetadata = sortedArray.map(file => extractEXIF(file));
 
-    let dataWithHash = exifMetadata.map(file => {
-        return { ...file, keccak256: addFileHash(file), cmoa, imageInfo, artist, chainData };
+    const dataWithHash = exifMetadata.map(file => {
+        return {
+            ...file,
+            keccak256: addFileHash(file),
+            cmoa: [],
+            imageInfo: [],
+            artist: [],
+            chainData: []
+        };
     });
 
-    console.log(dataWithHash);
+    const onlyDataToHash = dataWithHash.map(item => {
+        let obj = { fileName: item.fileName, hash: item.keccak256 };
+        return obj;
+    });
+
+    const hashItemsInArray = array => {
+        return array.map(item => {
+            return keccak256(JSON.stringify(item));
+        });
+    };
+
+    const result = hashItemsInArray(onlyDataToHash);
+    console.log(result);
 };
 
 start();
