@@ -31,7 +31,7 @@
         "buidler": "^0.2.8",
         "eth-crypto": "^1.5.0",
         "exif-parser": "^0.1.12",
-        "file-type": "^12.4.0",
+        "file-type": "^16.5.4",
         "keccak256": "^1.0.0",
         "merkle-tree-solidity": "^1.0.8",
         "merklemint": "0.0.1",
