@@ -34,7 +34,7 @@
         "file-type": "^12.4.0",
         "keccak256": "^1.0.0",
         "merkle-tree-solidity": "^1.0.8",
-        "merklemint": "0.0.1",
+        "merklemint": "0.0.5",
         "merkletreejs": "^0.1.7",
         "nodemon": "^1.19.4",
         "read-chunk": "^3.2.0",
